@@ -1,0 +1,201 @@
+
+Se prueba el funcionamiento del programa.
+
+SR=44110
+
+
+No tengo hop
+
+¿Cuál es el tamaño de ventana adecuado? ¿Tau adecuado?
+
+
+
+
+(Rampa con Pendiente de 200Hz/seg)
+
+Pruebo una sinusoide de frecuencia variable (rampa), entre 100 y 1100 Hz. Tau fijo en 20. Tamaño de ventana 1024 muestras.
+
+Detecta frecuencias a partir de los 217.24Hz (antes frecuencia alta fija 2205 -mitad de SR-) y escalonado a partir de los 600Hz(repetición de frecuencias)
+
+
+Pruebo una sinusoide de frecuencia variable (rampa), entre 100 y 1100 Hz. Tau fijo en 20. Tamaño de ventana 512 muestras.
+
+Detecta frecuencias a partir de los 275.62Hz (antes frecuencia alta fija 2205 -mitad de SR-) y repeticiones comienzan (?)
+
+
+Por debajo de 512 muestras tengo error apreciable en los graves.
+
+
+
+
+Variando el tau cambia el máximo de frecuencia que puedo detectar.
+
+tau=50 límite inf en 152.07, y sup en 882 Hz
+
+tau=100 límite inf menor a los 100Hz, y sup en 441Hz (múltiplos?)
+
+
+
+
+¿Cómo mejoro el rango de frecuencias?
+
+
+
+
+Dado tau y dado una frecuencia, constante a trozos. Parte chata, todos los máximos dan tau.
+
+¿Por qué pasa los trozos de alta frecuencia? Tomar tonos de esas frecuencias. 
+
+Tonos que dan la misma fundamental, estudiar qué pasa.
+
+Cambiar inclinación de la rampa. 
+
+Agregar solapamiento. ¿Mismo comportamiento?
+
+
+
+Tamaño de la ventana hace que no pueda responder lo suficientemente rápido, me limita la resolución en frecuencia.
+
+Ventanas adaptativas dependiendo de la frecuencia?
+
+--------------------10/5
+SR 44100
+Window 1024
+hop 0
+
+Se observa una diferencia en pendientes probando con frecuencia con forma de rampa.
+Se prueba de ver qué sucede con la autocorrelación para un frame determinado: 149
+
+Si elijo tau=10, maxTau=98, el cual corresponde con el pico deseado (mirar imagen de autocorrelación del frame)
+si maxTau=98, frecEstimada=SR/maxTau=44100/98=450
+
+El frame 150 se encuentra aprox en el instante t=(149*windowsize+windowsize/2)SR=3.7414
+frec=100+50*t=273.57
+
+!!!!! Problema con definición de frecEstimada?
+
+
+---->frecTeo=a+2bt
+
+
+----------------------------16/05
+
+Rampa 20+100t 
+Ventana 1024
+Analizo el efecto de variar el tau:
+
+foto 00- Tau=63
+foto 01- Tau=100
+foto 02- Tau=10
+foto 03- Tau=10 High Frec
+
+
+Ventana 512
+foto 04- Tau=10 High Frec Se extiende rango funcional hacia los agudos
+
+Hop Ventana/10
+foto 05- Tau=10 High Frec
+
+Ventana 1024
+Hop Ventana/10
+foto 06- Tau=10 High Frec
+
+
+Ventana 1024
+Hop Ventana/20
+foto 07- Tau=10 High Frec
+
+
+Ventana 1024
+Hop Ventana/20
+foto 08- Tau=63  Mejoro resolución. Es mejor frente a interpolar? Sigo teniendo escalones (Velocidad de la rampa? Preciso ventanas más chicas cada vez)
+
+
+Ventana 1024
+Hop ventana
+Tau=63
+Vemos qué pasa en la autocorrelación de la parte chata:
+foto 09 autocorr mirando frame 6 (i=5)
+maxTau=63, va a dar la frecuencia según el tau que yo puse, para frecuencias muy bajas. La ventana es muy chica.
+
+
+Ventana 2048
+Hop ventana
+Tau=63
+foto 10 autocorr mirando frame 6 (i=5)
+maxTau=63
+
+
+Ventana 2048
+Hop ventana
+Tau=63
+
+
+Ventana 256
+Hop ventana
+Tau=63
+
+
+
+
+
+explicar mejor tau
+
+
+
+hop- frecuencia de muestreo de ventana
+
+si hop=0, caja negra que me reporta cada 44100/1024        1 valor cada 23ms, muestreo cada 23ms
+si fo es más rápida que fnyq no la puedo ver
+a ventana fija, cuánto vale la frecuencia de muestreo? si me paso de fnyq todo mal
+
+con hop>0 arreglo el problema, más muestras
+
+
+
+tamaño de la ventana-
+no entra el período me da cualquier cosa
+
+si entran demasiados períodos. se mete un período de otra frecuencia. pesa más el primero entonces no veo cambio
+se da cuenta tarde
+tiene que ver con retardo de respuesta
+
+
+
+
+
+
+
+Foto 13, autocorr 
+ventana=1024 
+frame 172
+ tau=63
+
+
+VENTANA
+
+1 frame de
+400Hz-650Hz
+ventana=1024
+
+Foto 14, autocorr
+9-1
+
+Foto 15, autocorr
+8-2
+ 
+Foto 16, autocorr
+7-3
+
+.
+.
+.
+
+Foto 22, autocorr
+1-9
+
+Foto 23, autocorr
+1 ventana 20Hz
+
+Foto 24, autocorr
+1 ventana 43.47Hz
